@@ -26,11 +26,52 @@ namespace ams.Controllers
 
 
     // GET: api/ProviderDtoes
-    [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<IEnumerable<ProviderDto>>> GetProviderDto()
         {
-            return await _context.ProviderDto.ToListAsync();
+           
+            var providers = await _context.Providers.ToListAsync();
+            var providerDtos = _mapper.Map<List<ProviderDto>>(providers);
+
+            return Ok(providerDtos);
+        }*/
+        
+        // GET: api/Providers
+        [HttpGet]
+        public async Task<ActionResult<ProviderDto>> GetProviders()
+
+        {
+            var dataProviders = (from a in await _context.Providers.ToListAsync()
+
+                                 select new ProviderDto
+                                 {
+                                     Id = a.Id,
+                                     Name = a.Name,
+                                     Email = a.Email,
+                                     Address = a.Address,
+                                     Logo = a.Logo
+                                 }).ToList();
+
+
+            return Ok(dataProviders);
+
+
         }
+        /*[HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetProviders()
+        {
+            var providers = await _context.Providers
+                                        .Select(p => new {
+                                            p.Id,
+                                            p.Name,
+                                            p.Address
+
+                                            // Ajoutez d'autres champs selon vos besoins
+                                        })
+                                        .ToListAsync();
+
+            return providers;
+        }*/
 
         // GET: api/ProviderDtoes/5
         [HttpGet("{id}")]
@@ -89,7 +130,10 @@ namespace ams.Controllers
             _context.Providers.Add(newProvider);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProviderDto", new { id = newProvider.Id }, providerDto);
+            providerDto.Id = newProvider.Id;
+            
+
+            return CreatedAtAction("GetProviderDto", new { id = providerDto.Id }, providerDto);
         }
 
         // DELETE: api/ProviderDtoes/5

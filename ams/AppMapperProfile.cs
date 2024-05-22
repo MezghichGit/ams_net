@@ -8,8 +8,8 @@ namespace ams
     {
         public AppMapperProfile()
         {
-            CreateMap<ProviderDto, Provider>();
-            CreateMap<ArticleDto, Article>();
+            CreateMap<ProviderDto, Provider>().ReverseMap();
+            CreateMap<ArticleDto, Article>().ReverseMap();
         }
     }
 }
