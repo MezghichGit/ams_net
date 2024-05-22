@@ -18,5 +18,6 @@ namespace ams.Models
                 .HasForeignKey(a => a.ProviderId);
         }
         public DbSet<ams.Dtos.ProviderDto> ProviderDto { get; set; }
+        public DbSet<ams.Dtos.ArticleDto> ArticleDto { get; set; }
     }
 }
