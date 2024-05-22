@@ -7,25 +7,81 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ams.Dtos;
 using ams.Models;
+using AutoMapper;
 
 namespace ams.Controllers
 {
+    public class ArticleProviderDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string ProviderName { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class ArticleDtoesController : ControllerBase
     {
         private readonly ApplicationContext _context;
+        private readonly IMapper _mapper;
 
-        public ArticleDtoesController(ApplicationContext context)
+        public ArticleDtoesController(ApplicationContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/ArticleDtoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Article>>> GetArticleDto()
+        /*
+        public async Task<ActionResult<IEnumerable<ProviderDto>>> GetArticleDto()
         {
-            return await _context.Articles.ToListAsync();
+            var dataProviders = (from a in await _context.Articles.ToListAsync()
+
+                                 select new ArticleDto
+                                 {
+                                     Id = a.Id,
+                                     Name = a.Name,
+                                     Price = a.Price,
+                                     ProviderId = a.ProviderId
+                                 }).ToList();
+
+
+            return Ok(dataProviders);
+        }*/
+        public async Task<ActionResult<IEnumerable<ArticleProviderDto>>> GetArticles()
+        {
+            /*var articles = (from a in await _context.Articles.ToListAsync()
+
+                            select new Article
+                            {
+                                Id = a.Id,
+                                Name = a.Name,
+                                Price = a.Price,
+                                Provider = a.Provider,
+                                //ProviderAddress = "bb"
+
+                            }).ToList();
+
+
+            return Ok(articles);*/
+            var dataArticleProvider = (from a in await _context.Articles.ToListAsync()
+                                       join b in await _context.Providers.ToListAsync() on a.ProviderId equals b.Id
+
+                                       select new ArticleProviderDto
+                                       {
+                                           Id = a.Id,
+                                           Name = a.Name,
+                                           Price = a.Price,
+                                           ProviderName = b.Name
+
+                                       }).ToList();
+
+
+            return Ok(dataArticleProvider);
+
+
         }
 
         // GET: api/ArticleDtoes/5
@@ -78,8 +134,12 @@ namespace ams.Controllers
         [HttpPost]
         public async Task<ActionResult<ArticleDto>> PostArticleDto(ArticleDto articleDto)
         {
-            _context.ArticleDto.Add(articleDto);
+
+            var newArticle = _mapper.Map<Article>(articleDto);
+            _context.Articles.Add(newArticle);
             await _context.SaveChangesAsync();
+
+            articleDto.Id = newArticle.Id;
 
             return CreatedAtAction("GetArticleDto", new { id = articleDto.Id }, articleDto);
         }

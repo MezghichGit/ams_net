@@ -9,6 +9,7 @@ namespace ams.Dtos
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int ProviderId { get; set; }
-      
+        //public string ProviderName { get; set; }
+
     }
 }
