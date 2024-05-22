@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ams.Dtos;
 
 namespace ams.Models
 {
@@ -16,5 +17,6 @@ namespace ams.Models
                 .WithMany(p => p.Articles)
                 .HasForeignKey(a => a.ProviderId);
         }
+        public DbSet<ams.Dtos.ProviderDto> ProviderDto { get; set; }
     }
 }

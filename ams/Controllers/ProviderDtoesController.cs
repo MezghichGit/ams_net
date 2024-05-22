@@ -5,35 +5,36 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ams.Dtos;
 using ams.Models;
 using AutoMapper;
-using ams.Dtos;
 
 namespace ams.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProvidersController : ControllerBase
+    public class ProviderDtoesController : ControllerBase
     {
         private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
 
-        public ProvidersController(ApplicationContext context, IMapper mapper)
+        public ProviderDtoesController(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        // GET: api/Providers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Provider>>> GetProviders()
+
+    // GET: api/ProviderDtoes
+    [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProviderDto>>> GetProviderDto()
         {
-            return await _context.Providers.ToListAsync();
+            return await _context.ProviderDto.ToListAsync();
         }
 
-        // GET: api/Providers/5
+        // GET: api/ProviderDtoes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Provider>> GetProvider(int id)
+        public async Task<ActionResult<Provider>> GetProviderDto(int id)
         {
             var provider = await _context.Providers.FindAsync(id);
 
@@ -45,17 +46,17 @@ namespace ams.Controllers
             return provider;
         }
 
-        // PUT: api/Providers/5
+        // PUT: api/ProviderDtoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProvider(int id, Provider provider)
+        public async Task<IActionResult> PutProviderDto(int id, ProviderDto providerDto)
         {
-            if (id != provider.Id)
+            if (id != providerDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(provider).State = EntityState.Modified;
+            _context.Entry(providerDto).State = EntityState.Modified;
 
             try
             {
@@ -63,7 +64,7 @@ namespace ams.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProviderExists(id))
+                if (!ProviderDtoExists(id))
                 {
                     return NotFound();
                 }
@@ -76,38 +77,40 @@ namespace ams.Controllers
             return NoContent();
         }
 
-        // POST: api/Providers
+        // POST: api/ProviderDtoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Provider>> PostProvider(ProviderDto providerDto)
+        public async Task<ActionResult<ProviderDto>> PostProviderDto(ProviderDto providerDto)
         {
+            // _context.ProviderDto.Add(providerDto);
+            //await _context.SaveChangesAsync();
+
             var newProvider = _mapper.Map<Provider>(providerDto);
             _context.Providers.Add(newProvider);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProvider", new { id = newProvider.Id }, newProvider);
+            return CreatedAtAction("GetProviderDto", new { id = newProvider.Id }, providerDto);
         }
 
-  
-        // DELETE: api/Providers/5
+        // DELETE: api/ProviderDtoes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProvider(int id)
+        public async Task<IActionResult> DeleteProviderDto(int id)
         {
-            var provider = await _context.Providers.FindAsync(id);
-            if (provider == null)
+            var providerDto = await _context.ProviderDto.FindAsync(id);
+            if (providerDto == null)
             {
                 return NotFound();
             }
 
-            _context.Providers.Remove(provider);
+            _context.ProviderDto.Remove(providerDto);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ProviderExists(int id)
+        private bool ProviderDtoExists(int id)
         {
-            return _context.Providers.Any(e => e.Id == id);
+            return _context.ProviderDto.Any(e => e.Id == id);
         }
     }
 }

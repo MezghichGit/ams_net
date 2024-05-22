@@ -232,3 +232,4 @@ C:\Users\amine\source\repos\ams_solution\ams\bin\Debug\net8.0\Microsoft.AspNetCo
 C:\Users\amine\source\repos\ams_solution\ams\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 C:\Users\amine\source\repos\ams_solution\ams\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\amine\source\repos\ams_solution\ams\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\amine\source\repos\ams_solution\ams\obj\Debug\net8.0\ams.sourcelink.json
